@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ultimate EDA Cheatsheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:        #0d0f12;
+    --bg2:       #13161b;
+    --bg3:       #1a1e26;
+    --border:    #2d3344;
+    --text:      #e2e8f4;
+    --muted:     #8b96ad;
+    --heading:   #ffffff;
+    --accent0:   #5b9cf9; /* router blue */
+    --accent1:   #34d69a; /* phase green */
+    --accent2:   #fbbf24; /* warning amber */
+    --accent3:   #f06292; /* danger pink */
+    --accent4:   #c4b5fd; /* purple */
+    --accent5:   #38bdf8; /* sky */
+    --code-bg:   #080a0e;
+    --code-text: #b8f0b8;
+    --tag-bg:    #1e2736;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  nav {
+    width: 240px;
+    min-width: 240px;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-logo {
+    padding: 0 20px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .nav-logo span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent0);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .nav-logo h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--heading);
+    margin-top: 4px;
+  }
+  .nav-section {
+    padding: 6px 20px 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 20px;
+    color: #7a8caa;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.15s, background 0.15s;
+    border-left: 2px solid transparent;
+  }
+  nav a:hover { color: var(--text); background: var(--bg3); }
+  nav a.active { color: var(--heading); border-left-color: var(--accent0); background: var(--bg3); }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1;
+    max-width: 900px;
+    padding: 48px 52px;
+    overflow-x: hidden;
+  }
+
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent0);
+    margin-bottom: 10px;
+  }
+  .page-header h1 {
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--heading);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .page-header p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 560px;
+  }
+
+  /* ── SECTION ── */
+  section {
+    margin-bottom: 56px;
+    scroll-margin-top: 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .phase-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--heading);
+  }
+  h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--heading);
+    margin: 24px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h3::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--accent0);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* ── ROUTER BLOCK ── */
+  .router-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent0);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.9;
+    color: var(--text);
+  }
+  .router-block .r-label { color: var(--accent0); font-weight: 600; }
+  .router-block .r-option { color: var(--accent1); }
+  .router-block .r-track { color: var(--accent2); font-weight: 600; }
+  .router-block .r-branch { color: var(--muted); }
+
+  /* ── CODE BLOCK ── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 14px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.75;
+    color: var(--code-text);
+  }
+  code { font-family: 'IBM Plex Mono', monospace; }
+  p code, li code {
+    background: var(--tag-bg);
+    color: var(--accent5);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr { border-bottom: 2px solid var(--border); }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: #d4ddef;
+    vertical-align: top;
+  }
+  tbody tr:hover td { background: var(--bg3); }
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+  .ok   { color: var(--accent1); }
+  .warn { color: var(--accent2); }
+  .bad  { color: var(--accent3); }
+
+  /* ── DECISION TABLE ── */
+  .decision-table td:first-child { color: var(--accent5); font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+  }
+  .checklist li .cb {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--bg3);
+  }
+  .checklist li:hover { border-color: var(--accent0); }
+  .checklist li:hover .cb { border-color: var(--accent0); }
+
+  .checklist-group { margin-bottom: 16px; }
+  .checklist-group-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    padding-left: 4px;
+  }
+
+  /* ── INFO CALLOUT ── */
+  .callout {
+    display: flex;
+    gap: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 13px;
+  }
+  .callout.blue  { border-left: 3px solid var(--accent0); }
+  .callout.green { border-left: 3px solid var(--accent1); }
+  .callout.amber { border-left: 3px solid var(--accent2); }
+  .callout.red   { border-left: 3px solid var(--accent3); }
+  .callout-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+  /* ── PILL TAGS ── */
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .pill {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .pill-blue   { color: var(--accent0); border-color: var(--accent0); background: #4f8ef710; }
+  .pill-green  { color: var(--accent1); border-color: var(--accent1); background: #3ecf8e10; }
+  .pill-amber  { color: var(--accent2); border-color: var(--accent2); background: #f5a62310; }
+  .pill-red    { color: var(--accent3); border-color: var(--accent3); background: #e05c7a10; }
+  .pill-purple { color: var(--accent4); border-color: var(--accent4); background: #a78bfa10; }
+
+  ul, ol { padding-left: 20px; margin: 10px 0; }
+  li { margin-bottom: 5px; }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 800px) {
+    nav { display: none; }
+    main { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<nav>
+  <div class="nav-logo">
+    <span>Data Science</span>
+    <h2>EDA Cheatsheet</h2>
+  </div>
+
+  <div class="nav-section">Start here</div>
+  <a href="#router"><span class="dot" style="background:#4f8ef7"></span>Dataset Router</a>
+
+  <div class="nav-section">Phases</div>
+  <a href="#phase0"><span class="dot" style="background:#3ecf8e"></span>Phase 0 — First 5 min</a>
+  <a href="#phase1"><span class="dot" style="background:#3ecf8e"></span>Phase 1 — Inventory</a>
+  <a href="#phase2"><span class="dot" style="background:#3ecf8e"></span>Phase 2 — Univariate</a>
+  <a href="#phase3"><span class="dot" style="background:#3ecf8e"></span>Phase 3 — Target</a>
+  <a href="#phase4"><span class="dot" style="background:#f5a623"></span>Phase 4 — vs Target</a>
+  <a href="#phase5"><span class="dot" style="background:#f5a623"></span>Phase 5 — vs Feature</a>
+  <a href="#phase6"><span class="dot" style="background:#a78bfa"></span>Phase 6 — Time Series</a>
+  <a href="#phase7"><span class="dot" style="background:#a78bfa"></span>Phase 7 — Text</a>
+
+  <div class="nav-section">Reference</div>
+  <a href="#graph-ref"><span class="dot" style="background:#38bdf8"></span>Graph Reference</a>
+  <a href="#test-ref"><span class="dot" style="background:#38bdf8"></span>Test Reference</a>
+  <a href="#checklist"><span class="dot" style="background:#e05c7a"></span>Final Checklist</a>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main>
+
+  <div class="page-header">
+    <div class="eyebrow">Exploratory Data Analysis</div>
+    <h1>The Ultimate EDA Cheatsheet</h1>
+    <p>Works for every dataset. Follow the router first to know which phases apply, then execute in order.</p>
+    <div class="pills" style="margin-top:16px">
+      <span class="pill pill-blue">Binary Classification</span>
+      <span class="pill pill-blue">Multiclass</span>
+      <span class="pill pill-blue">Regression</span>
+      <span class="pill pill-purple">Time Series</span>
+      <span class="pill pill-purple">NLP / Text</span>
+      <span class="pill pill-green">All dataset sizes</span>
+    </div>
+  </div>
+
+  <!-- ══ ROUTER ══ -->
+  <section id="router">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#4f8ef720;color:var(--accent0);border:1px solid #4f8ef740">ROUTER</span>
+      <h2>Answer these 4 questions first</h2>
+    </div>
+    <p>This tells you exactly which phases and blocks apply to your dataset.</p>
+    <div class="router-block">
+      <div><span class="r-label">Q1. What is your target variable?</span></div>
+      <div>&nbsp;&nbsp;&nbsp;├── Continuous number (price, sales, temp) &nbsp;→ <span class="r-track">REGRESSION track</span></div>
+      <div>&nbsp;&nbsp;&nbsp;├── Binary (yes/no, fraud/not, 0/1) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="r-track">BINARY CLASSIFICATION track</span></div>
+      <div>&nbsp;&nbsp;&nbsp;├── 3+ categories (dog/cat/bird) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="r-track">MULTICLASS track</span></div>
+      <div>&nbsp;&nbsp;&nbsp;└── No target &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="r-track">UNSUPERVISED / PURE EDA track</span></div>
+      <br/>
+      <div><span class="r-label">Q2. Does the dataset have a meaningful date/time column?</span></div>
+      <div>&nbsp;&nbsp;&nbsp;└── Yes → <span class="r-option">add TIME SERIES BLOCK (Phase 6)</span></div>
+      <br/>
+      <div><span class="r-label">Q3. Does the dataset have free-text columns?</span></div>
+      <div>&nbsp;&nbsp;&nbsp;└── Yes → <span class="r-option">add TEXT BLOCK (Phase 7)</span></div>
+      <br/>
+      <div><span class="r-label">Q4. How large is the dataset?</span></div>
+      <div>&nbsp;&nbsp;&nbsp;├── &lt; 10k rows &nbsp;&nbsp;→ load fully, use all plots freely</div>
+      <div>&nbsp;&nbsp;&nbsp;├── 10k–1M rows → sample for plots (50k max), full data for stats</div>
+      <div>&nbsp;&nbsp;&nbsp;└── &gt; 1M rows &nbsp;&nbsp;→ always sample for EDA, use chunking / Dask</div>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 0 ══ -->
+  <section id="phase0">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#3ecf8e15;color:var(--accent1);border:1px solid #3ecf8e30">PHASE 0</span>
+      <h2>First 5 Minutes — Every Dataset, No Exceptions</h2>
+    </div>
+    <p>Run this block before any analysis. It tells you what you're dealing with.</p>
+<pre>df = pd.read_csv("your_file.csv")   # or read_excel, read_json etc.
+
+print(df.shape)                      # (rows, cols)
+print(df.info())                     # dtypes + null count
+print(df.describe())                 # numeric summary
+print(df.describe(include='object')) # categorical summary
+
+# Null counts + percentage
+null_df = pd.DataFrame({
+    'count':   df.isnull().sum(),
+    'percent': df.isnull().mean() * 100
+}).sort_values('percent', ascending=False)
+print(null_df[null_df['count'] > 0])
+
+print(f"Duplicates: {df.duplicated().sum()}")
+print(df.nunique().sort_values())    # catch IDs and constants</pre>
+
+    <h3>Decision table from Phase 0</h3>
+    <div class="table-wrap">
+      <table class="decision-table">
+        <thead><tr><th>Finding</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Column has 100% unique values</td><td>Likely an ID → drop before modelling</td></tr>
+          <tr><td>Column has 1 unique value</td><td>Zero variance → drop</td></tr>
+          <tr><td>Wrong dtype (date as object)</td><td>Fix dtype immediately</td></tr>
+          <tr><td>Duplicates &gt; 0</td><td>Investigate — drop or keep based on context</td></tr>
+          <tr><td>Null % &lt; 5%</td><td><span class="ok">Impute (mean / median / mode)</span></td></tr>
+          <tr><td>Null % 5–30%</td><td><span class="warn">Impute + add binary indicator column</span></td></tr>
+          <tr><td>Null % 30–70%</td><td><span class="warn">Drop or use with extreme caution</span></td></tr>
+          <tr><td>Null % &gt; 70%</td><td><span class="bad">Drop unless domain forces otherwise</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 1 ══ -->
+  <section id="phase1">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#3ecf8e15;color:var(--accent1);border:1px solid #3ecf8e30">PHASE 1</span>
+      <h2>Feature Inventory</h2>
+    </div>
+<pre>numeric_features     = df.select_dtypes(include=['number']).columns.tolist()
+categorical_features = df.select_dtypes(include=['object','category']).columns.tolist()
+datetime_features    = df.select_dtypes(include=['datetime']).columns.tolist()
+
+# Split numeric
+discrete_features   = [f for f in numeric_features if df[f].nunique() <= 25]
+continuous_features = [f for f in numeric_features if df[f].nunique() > 25]
+
+# Flag high-cardinality
+high_card = [f for f in categorical_features if df[f].nunique() > 50]</pre>
+
+    <h3>High-cardinality guide</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Unique values</th><th>Plot safe?</th><th>Encoding strategy</th></tr></thead>
+        <tbody>
+          <tr><td>&lt; 10</td><td><span class="ok">Yes — countplot fine</span></td><td>One-hot encoding</td></tr>
+          <tr><td>10–50</td><td><span class="warn">Careful — group rare categories</span></td><td>Target encoding, frequency encoding</td></tr>
+          <tr><td>50+</td><td><span class="bad">No — do not countplot</span></td><td>Target encoding, embeddings — never one-hot</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 2 ══ -->
+  <section id="phase2">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#3ecf8e15;color:var(--accent1);border:1px solid #3ecf8e30">PHASE 2</span>
+      <h2>Univariate Analysis — No Target Involved</h2>
+    </div>
+    <p>Understand each feature on its own before connecting it to the target.</p>
+
+    <h3>2A — Categorical features</h3>
+<pre>for col in categorical_features:
+    print(df[col].value_counts(normalize=True) * 100)
+
+# Graph: one countplot per column
+sns.countplot(x=col, data=df)</pre>
+    <div class="callout blue"><span class="callout-icon">→</span><span>Flag: one category &gt;80% → dominant. Category &lt;1% → merge into "Other". All unique → ID column, drop.</span></div>
+
+    <h3>2B — Continuous features</h3>
+<pre>for col in continuous_features:
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+    sns.histplot(df[col], kde=True, ax=axes[0])  # shape
+    sns.boxplot(y=df[col], ax=axes[1])            # outliers
+    sns.kdeplot(df[col], ax=axes[2])              # density
+    plt.suptitle(col); plt.tight_layout(); plt.show()
+
+# Skewness for all at once
+print(df[continuous_features].skew().sort_values())</pre>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Skewness value</th><th>Meaning</th><th>Likely fix</th></tr></thead>
+        <tbody>
+          <tr><td class="tag">&lt; -1</td><td>Heavily left-skewed</td><td>Reflect + log transform</td></tr>
+          <tr><td class="tag">-1 to -0.5</td><td>Moderately left-skewed</td><td>Square root or cube root</td></tr>
+          <tr><td class="tag">-0.5 to 0.5</td><td>Roughly symmetric</td><td><span class="ok">No transform needed</span></td></tr>
+          <tr><td class="tag">0.5 to 1</td><td>Moderately right-skewed</td><td>Square root transform</td></tr>
+          <tr><td class="tag">&gt; 1</td><td>Heavily right-skewed</td><td>Log / Box-Cox transform</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Outlier check (IQR method)</h3>
+<pre>for col in continuous_features:
+    Q1, Q3 = df[col].quantile(0.25), df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower, upper = Q1 - 1.5*IQR, Q3 + 1.5*IQR
+    n_out = df[(df[col] < lower) | (df[col] > upper)].shape[0]
+    print(f"{col}: {n_out} outliers ({n_out/len(df)*100:.1f}%)")</pre>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 3 ══ -->
+  <section id="phase3">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#3ecf8e15;color:var(--accent1);border:1px solid #3ecf8e30">PHASE 3</span>
+      <h2>Target Variable Analysis</h2>
+    </div>
+
+    <h3>3A — Classification target</h3>
+<pre>print(df['target'].value_counts())
+print(df['target'].value_counts(normalize=True) * 100)
+sns.countplot(x='target', data=df)</pre>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Majority class %</th><th>Situation</th><th>Metric to use</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>50–60%</td><td><span class="ok">Balanced</span></td><td>Accuracy fine</td><td>—</td></tr>
+          <tr><td>60–80%</td><td><span class="ok">Mild imbalance</span></td><td>F1-score</td><td>Check per-class metrics</td></tr>
+          <tr><td>80–90%</td><td><span class="warn">Moderate imbalance</span></td><td>AUC-ROC, F1</td><td>class_weight='balanced'</td></tr>
+          <tr><td>90–95%</td><td><span class="warn">Severe imbalance</span></td><td>PR curve, AUC-ROC</td><td>Consider SMOTE</td></tr>
+          <tr><td>&gt; 95%</td><td><span class="bad">Extreme imbalance</span></td><td>PR curve only</td><td>Treat as anomaly detection</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3B — Regression target</h3>
+<pre>sns.histplot(df['target'], kde=True)
+print(f"Skewness: {df['target'].skew():.2f}")
+print(f"Mean: {df['target'].mean():.2f}, Median: {df['target'].median():.2f}")</pre>
+    <div class="callout amber"><span class="callout-icon">→</span><span>If target is skewed, consider log-transforming the target itself before modelling. Models like linear regression assume normally distributed residuals.</span></div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 4 ══ -->
+  <section id="phase4">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#f5a62315;color:var(--accent2);border:1px solid #f5a62330">PHASE 4</span>
+      <h2>Feature vs Target — Bivariate</h2>
+    </div>
+    <p>Find which features actually carry signal for prediction.</p>
+
+    <h3>4A — Categorical feature vs Binary/Multiclass target</h3>
+    <p><strong>Statistical test: Chi-Square</strong></p>
+<pre>from scipy.stats import chi2_contingency
+for col in categorical_features:
+    if col == 'target': continue
+    p = chi2_contingency(pd.crosstab(df['target'], df[col]))[1]
+    result = "SIGNIFICANT ✓" if p < 0.05 else "not significant ✗"
+    print(f"{col:30s}  p={p:.4f}  {result}")</pre>
+
+    <p><strong>Graphs — use all three together:</strong></p>
+<pre># 1. Raw count split — shows volume
+sns.countplot(x=col, hue='target', data=df)
+
+# 2. Rate — more honest when category sizes differ
+(100 * df[df['target']==pos_class][col].value_counts()
+ / df[col].value_counts()).sort_values().plot(kind='bar')
+
+# 3. Exact proportions table
+df.groupby(col)['target'].value_counts(normalize=True).to_frame() * 100</pre>
+    <div class="callout green"><span class="callout-icon">→</span><span>Why all three: count plot shows volume, rate chart shows success rate. A rare category can have 90% success rate — you'd miss that with count plot alone.</span></div>
+
+    <h3>4B — Categorical feature vs Continuous target</h3>
+    <p><strong>Statistical tests: ANOVA or Kruskal-Wallis</strong></p>
+<pre>from scipy.stats import f_oneway, kruskal
+for col in categorical_features:
+    groups = [df[df[col]==c]['target'].dropna() for c in df[col].unique()]
+    p_anova   = f_oneway(*groups).pvalue
+    p_kruskal = kruskal(*groups).pvalue
+    print(f"{col:30s}  ANOVA p={p_anova:.4f}  Kruskal p={p_kruskal:.4f}")
+
+# Graphs
+sns.boxplot(x=col, y='target', data=df)
+sns.violinplot(x=col, y='target', data=df)
+df.groupby(col)['target'].mean().plot(kind='bar')</pre>
+
+    <h3>4C — Continuous feature vs Binary target</h3>
+    <p><strong>Statistical tests: KS Test or t-test</strong></p>
+<pre>from scipy.stats import ks_2samp, ttest_ind
+groups = df['target'].unique()
+for col in continuous_features:
+    g = [df[df['target']==c][col].dropna() for c in groups]
+    p_ks = ks_2samp(g[0], g[1]).pvalue
+    p_t  = ttest_ind(g[0], g[1]).pvalue
+    print(f"{col:30s}  KS p={p_ks:.4f}  t-test p={p_t:.4f}")
+
+# Graphs
+sns.histplot(data=df, x=col, hue='target', kde=True, multiple='stack')
+sns.boxplot(data=df, x='target', y=col)
+sns.violinplot(data=df, x='target', y=col)</pre>
+
+    <h3>4D — Continuous feature vs Continuous target (Regression)</h3>
+<pre>print(df[continuous_features+['target']].corr()['target'].sort_values())
+print(df[continuous_features+['target']].corr(method='spearman')['target'].sort_values())
+
+sns.scatterplot(x=col, y='target', data=df)
+sns.regplot(x=col, y='target', data=df)</pre>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>|r| value</th><th>Strength</th></tr></thead>
+        <tbody>
+          <tr><td>0.0 – 0.1</td><td><span class="bad">Negligible — likely useless</span></td></tr>
+          <tr><td>0.1 – 0.3</td><td>Weak</td></tr>
+          <tr><td>0.3 – 0.5</td><td><span class="warn">Moderate</span></td></tr>
+          <tr><td>0.5 – 0.7</td><td><span class="ok">Strong</span></td></tr>
+          <tr><td>0.7 – 1.0</td><td><span class="ok">Very strong</span> — also check multicollinearity</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 5 ══ -->
+  <section id="phase5">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#f5a62315;color:var(--accent2);border:1px solid #f5a62330">PHASE 5</span>
+      <h2>Feature vs Feature — Multivariate</h2>
+    </div>
+    <p>Find redundant features and unexpected interactions.</p>
+
+    <h3>5A — Numeric vs Numeric (multicollinearity)</h3>
+<pre>corr = df[numeric_features].corr()
+sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0)
+
+# Flag dangerous pairs
+import numpy as np
+upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(bool))
+high_corr = [(col, row, upper.loc[row, col])
+             for col in upper.columns for row in upper.index
+             if abs(upper.loc[row, col]) > 0.7]
+print("High correlation pairs (|r| > 0.7):", high_corr)</pre>
+    <div class="callout amber"><span class="callout-icon">→</span><span>If |r| &gt; 0.7 between two features: keep one, drop or transform the other for linear models. Tree-based models are less sensitive to multicollinearity.</span></div>
+
+    <h3>5B — Categorical vs Categorical (Cramér's V)</h3>
+<pre>from scipy.stats import chi2_contingency
+def cramers_v(x, y):
+    cm  = pd.crosstab(x, y)
+    chi2 = chi2_contingency(cm)[0]
+    n    = cm.sum().sum()
+    r, k = cm.shape
+    return np.sqrt(chi2 / (n * (min(r, k) - 1)))
+
+for col in categorical_features:
+    for col2 in categorical_features:
+        if col >= col2: continue
+        v = cramers_v(df[col], df[col2])
+        if v > 0.6:
+            print(f"{col} vs {col2}: V={v:.2f} — HIGH ASSOCIATION")</pre>
+
+    <h3>5C — Numeric vs Categorical</h3>
+<pre>df.groupby('cat_col')['num_col'].agg(['mean','median','std'])
+sns.boxplot(y='cat_col', x='num_col', data=df)</pre>
+
+    <h3>5D — Pairplot (quick overview)</h3>
+<pre>sample = df.sample(min(5000, len(df)))
+sns.pairplot(sample[continuous_features + ['target']], hue='target')</pre>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 6 ══ -->
+  <section id="phase6">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#a78bfa15;color:var(--accent4);border:1px solid #a78bfa30">PHASE 6</span>
+      <h2>Time Series Block</h2>
+    </div>
+    <p>Add this only if your dataset has a meaningful date/time column (Q2 in router = Yes).</p>
+<pre>df['date_col'] = pd.to_datetime(df['date_col'])
+df = df.sort_values('date_col').set_index('date_col')
+
+df['target'].plot(title='Target over time')
+df['target'].resample('M').mean().plot(title='Monthly avg')
+df['target'].resample('Y').mean().plot(title='Yearly avg')
+
+df['month']   = df.index.month
+df['weekday'] = df.index.dayofweek
+sns.boxplot(x='month', y='target', data=df.reset_index())
+
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+plot_acf(df['target'].dropna(), lags=40)
+plot_pacf(df['target'].dropna(), lags=40)</pre>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Finding</th><th>Meaning</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Consistent upward/downward trend</td><td>Non-stationary</td><td>Differencing or detrending</td></tr>
+          <tr><td>Repeating pattern by month/weekday</td><td>Seasonality present</td><td>Add seasonal features or decompose</td></tr>
+          <tr><td>ACF drops off slowly</td><td>Non-stationary</td><td>Difference the series</td></tr>
+          <tr><td>Sudden spikes</td><td>External events or errors</td><td>Investigate, possibly mark as anomaly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ PHASE 7 ══ -->
+  <section id="phase7">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#a78bfa15;color:var(--accent4);border:1px solid #a78bfa30">PHASE 7</span>
+      <h2>Text Block</h2>
+    </div>
+    <p>Add this only if any column contains free text (Q3 in router = Yes).</p>
+<pre>text_col = 'your_text_column'
+
+df['text_length'] = df[text_col].str.len()
+df['word_count']  = df[text_col].str.split().str.len()
+print(df[['text_length','word_count']].describe())
+sns.histplot(df['word_count'], bins=50)
+
+from collections import Counter
+import re
+all_words = ' '.join(df[text_col].dropna()).lower()
+all_words = re.sub(r'[^a-z\s]', '', all_words)
+print(Counter(all_words.split()).most_common(30))
+
+# Compare word distributions per target class
+for label in df['target'].unique():
+    text = ' '.join(df[df['target']==label][text_col].dropna()).lower()
+    text = re.sub(r'[^a-z\s]', '', text)
+    print(f"\n--- {label} ---")
+    print(Counter(text.split()).most_common(20))</pre>
+  </section>
+
+  <hr/>
+
+  <!-- ══ GRAPH REFERENCE ══ -->
+  <section id="graph-ref">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#38bdf815;color:var(--accent5);border:1px solid #38bdf830">REFERENCE</span>
+      <h2>Master Graph Reference</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>What to show</th><th>Best graph</th><th>When to avoid</th></tr></thead>
+        <tbody>
+          <tr><td>Single categorical distribution</td><td><code>countplot</code></td><td>When &gt; 20 categories — use horizontal bar</td></tr>
+          <tr><td>Single continuous distribution</td><td><code>histplot</code> + <code>kdeplot</code></td><td>Never avoid for EDA</td></tr>
+          <tr><td>Outlier check</td><td><code>boxplot</code></td><td>Doesn't show shape — pair with histogram</td></tr>
+          <tr><td>Shape + outliers combined</td><td><code>violinplot</code></td><td>When n &lt; 100 (too noisy)</td></tr>
+          <tr><td>Categorical vs classification target</td><td><code>countplot(hue=target)</code> + % bar</td><td>Always use % bar alongside count</td></tr>
+          <tr><td>Continuous vs binary target</td><td><code>histplot(hue=target)</code> + <code>boxplot</code></td><td>—</td></tr>
+          <tr><td>Continuous vs continuous target</td><td><code>scatterplot</code> + <code>regplot</code></td><td>Large datasets — sample first</td></tr>
+          <tr><td>Numeric multicollinearity</td><td><code>heatmap(corr())</code></td><td>—</td></tr>
+          <tr><td>All pairwise relationships</td><td><code>pairplot</code></td><td>&gt; 10 features or &gt; 50k rows without sampling</td></tr>
+          <tr><td>Numeric vs categorical</td><td><code>boxplot(y=cat, x=num)</code></td><td>—</td></tr>
+          <tr><td>Target class balance</td><td>Pie chart or <code>countplot</code></td><td>Pie when &gt; 5 classes</td></tr>
+          <tr><td>Time trend</td><td>Line plot, <code>resample().plot()</code></td><td>—</td></tr>
+          <tr><td>Seasonality</td><td><code>boxplot(x=period, y=target)</code></td><td>—</td></tr>
+          <tr><td>Text word frequency</td><td>Bar chart of top N words</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ TEST REFERENCE ══ -->
+  <section id="test-ref">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#38bdf815;color:var(--accent5);border:1px solid #38bdf830">REFERENCE</span>
+      <h2>Master Statistical Test Reference</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Feature type</th><th>Target type</th><th>Test</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Categorical</td><td>Categorical</td><td><code>chi2_contingency</code></td><td>Always for cat vs cat</td></tr>
+          <tr><td>Categorical</td><td>Categorical</td><td>Cramér's V</td><td>Strength of association (pair with Chi-Square)</td></tr>
+          <tr><td>Continuous</td><td>Binary categorical</td><td><code>ks_2samp</code></td><td>No normality assumption — safer default</td></tr>
+          <tr><td>Continuous</td><td>Binary categorical</td><td><code>ttest_ind</code></td><td>When data is roughly normal</td></tr>
+          <tr><td>Continuous</td><td>Multi-class categorical</td><td><code>f_oneway</code> (ANOVA)</td><td>When groups roughly normal</td></tr>
+          <tr><td>Continuous</td><td>Multi-class categorical</td><td><code>kruskal</code></td><td>Non-normal — safer default</td></tr>
+          <tr><td>Continuous</td><td>Continuous</td><td>Pearson correlation</td><td>Linear relationship, no outliers</td></tr>
+          <tr><td>Continuous</td><td>Continuous</td><td>Spearman correlation</td><td>Non-linear or has outliers — prefer this</td></tr>
+          <tr><td>Time series</td><td>—</td><td>ACF / PACF</td><td>Autocorrelation and stationarity check</td></tr>
+          <tr><td>Any</td><td>Any</td><td>VIF</td><td>Multicollinearity check before linear models</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr/>
+
+  <!-- ══ CHECKLIST ══ -->
+  <section id="checklist">
+    <div class="section-header">
+      <span class="phase-badge" style="background:#f0629215;color:var(--accent3);border:1px solid #f0629230">CHECKLIST</span>
+      <h2>Final Sign-off Before Feature Engineering</h2>
+    </div>
+    <p>Click each item to mark it done. Progress is saved in your browser.</p>
+
+    <!-- Progress bar -->
+    <div id="progress-wrap" style="margin:20px 0 28px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Progress</span>
+        <span id="progress-label" style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:var(--accent1)">0 / 19</span>
+      </div>
+      <div style="height:6px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border);">
+        <div id="progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#34d69a,#5b9cf9);border-radius:4px;transition:width 0.4s cubic-bezier(.4,0,.2,1);"></div>
+      </div>
+    </div>
+
+    <div id="checklist-container"></div>
+
+    <div id="done-banner" style="display:none;margin-top:24px;padding:18px 22px;background:#34d69a12;border:1px solid #34d69a40;border-radius:10px;text-align:center;">
+      <div style="font-size:22px;margin-bottom:6px;">✓</div>
+      <div style="color:#34d69a;font-weight:600;font-size:15px;">All done — ready for Feature Engineering!</div>
+    </div>
+
+    <button id="reset-btn" onclick="resetChecklist()" style="margin-top:20px;padding:7px 16px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;">
+      Reset all
+    </button>
+  </section>
+
+</main>
+
+<style>
+  .cl-group { margin-bottom:20px; }
+  .cl-group-title {
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:8px;
+    padding-left:4px;
+  }
+  .cl-list { list-style:none;display:flex;flex-direction:column;gap:6px; }
+  .cl-item {
+    display:flex;align-items:flex-start;gap:12px;
+    padding:10px 14px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    transition:border-color 0.2s, background 0.2s;
+    user-select:none;
+  }
+  .cl-item:hover { border-color:#3d4a62; background:var(--bg3); }
+  .cl-item.checked {
+    background:#34d69a0a;
+    border-color:#34d69a35;
+  }
+  .cl-item.checked .cl-text {
+    color:var(--muted);
+    text-decoration:line-through;
+    text-decoration-color:#34d69a60;
+  }
+  .cl-box {
+    width:18px;height:18px;min-width:18px;
+    border:1.5px solid #3d4a62;
+    border-radius:5px;
+    background:var(--bg3);
+    display:flex;align-items:center;justify-content:center;
+    margin-top:1px;
+    transition:all 0.2s;
+    font-size:11px;
+    color:transparent;
+  }
+  .cl-item.checked .cl-box {
+    background:#34d69a;
+    border-color:#34d69a;
+    color:#0d0f12;
+    font-weight:700;
+  }
+  .cl-text {
+    font-size:13.5px;
+    color:#dde5f5;
+    line-height:1.5;
+    transition:color 0.2s;
+  }
+  #reset-btn:hover { border-color:#f06292; color:#f06292; }
+</style>
+
+<script>
+  const GROUPS = [
+    {
+      title: 'Data quality',
+      items: [
+        'Shape and dtypes confirmed (df.shape, df.info())',
+        'ID columns dropped — 100% unique values = no signal',
+        'Zero-variance columns dropped — 1 unique value = useless',
+        'Wrong dtypes fixed (dates as datetime, categories not as int)',
+        'Duplicates investigated and handled',
+        'Missing values assessed — strategy decided per column',
+      ]
+    },
+    {
+      title: 'Univariate',
+      items: [
+        'All categorical features: distribution and dominant categories noted',
+        'All continuous features: skewness measured, outliers quantified',
+        'Target variable: class balance checked (classification) or skew noted (regression)',
+      ]
+    },
+    {
+      title: 'Feature vs target',
+      items: [
+        'Chi-Square run for all categorical features → insignificant ones flagged',
+        'KS / t-test / ANOVA run for all numeric features → insignificant ones flagged',
+        'Every significant feature visualised vs target (countplot + % bar, or boxplot + histplot)',
+      ]
+    },
+    {
+      title: 'Feature vs feature',
+      items: [
+        'Correlation heatmap checked — pairs with |r| > 0.7 flagged',
+        'High-cardinality categoricals handled (grouping or encoding strategy decided)',
+        'Cramér\'s V run between categorical pairs',
+      ]
+    },
+    {
+      title: 'Special blocks (if applicable)',
+      items: [
+        'TIME SERIES: trend, seasonality, and autocorrelation checked',
+        'TEXT: length distribution, top words, per-class word frequency checked',
+      ]
+    },
+    {
+      title: 'Pre-modelling decisions',
+      items: [
+        'Imbalanced target → evaluation metric chosen (AUC-ROC / F1 / PR curve)',
+        'Skewed features → transform candidates listed',
+        'Outlier strategy decided (cap, remove, or keep with reasoning)',
+        'Features to drop listed with reason',
+        'Encoding strategy decided for each categorical column',
+      ]
+    },
+  ];
+
+  const TOTAL = GROUPS.reduce((s, g) => s + g.items.length, 0);
+  const KEY   = 'eda_checklist_v1';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {}
+  }
+
+  function updateProgress() {
+    const state   = load();
+    const checked = Object.values(state).filter(Boolean).length;
+    const pct     = Math.round((checked / TOTAL) * 100);
+    document.getElementById('progress-bar').style.width   = pct + '%';
+    document.getElementById('progress-label').textContent = checked + ' / ' + TOTAL;
+    const bar = document.getElementById('progress-bar');
+    if (checked === TOTAL) {
+      bar.style.background = 'linear-gradient(90deg,#34d69a,#34d69a)';
+      document.getElementById('done-banner').style.display = 'block';
+    } else {
+      bar.style.background = 'linear-gradient(90deg,#34d69a,#5b9cf9)';
+      document.getElementById('done-banner').style.display = 'none';
+    }
+  }
+
+  function toggle(id) {
+    const state  = load();
+    state[id]    = !state[id];
+    save(state);
+    const item   = document.querySelector(`[data-id="${id}"]`);
+    const box    = item.querySelector('.cl-box');
+    if (state[id]) {
+      item.classList.add('checked');
+      box.textContent = '✓';
+    } else {
+      item.classList.remove('checked');
+      box.textContent = '';
+    }
+    updateProgress();
+  }
+
+  function resetChecklist() {
+    save({});
+    document.querySelectorAll('.cl-item').forEach(el => {
+      el.classList.remove('checked');
+      el.querySelector('.cl-box').textContent = '';
+    });
+    updateProgress();
+  }
+
+  function buildChecklist() {
+    const state     = load();
+    const container = document.getElementById('checklist-container');
+    let   idxGlobal = 0;
+
+    GROUPS.forEach(group => {
+      const div = document.createElement('div');
+      div.className = 'cl-group';
+      const titleEl = document.createElement('div');
+      titleEl.className   = 'cl-group-title';
+      titleEl.textContent = group.title;
+      div.appendChild(titleEl);
+
+      const ul = document.createElement('ul');
+      ul.className = 'cl-list';
+
+      group.items.forEach(text => {
+        const id      = 'ci_' + idxGlobal++;
+        const checked = !!state[id];
+        const li      = document.createElement('li');
+        li.className  = 'cl-item' + (checked ? ' checked' : '');
+        li.dataset.id = id;
+        li.onclick    = () => toggle(id);
+        li.innerHTML  = `
+          <div class="cl-box">${checked ? '✓' : ''}</div>
+          <span class="cl-text">${text}</span>
+        `;
+        ul.appendChild(li);
+      });
+
+      div.appendChild(ul);
+      container.appendChild(div);
+    });
+
+    updateProgress();
+  }
+
+  buildChecklist();
+
+  /* ── Scroll spy ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`nav a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.25 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
